@@ -150,25 +150,21 @@ try {
 }
 
 function updatePlayers(playerData) {
-  const playersContainer = document.querySelector('.section-container:nth-child(1) .section-content');
+  const playersContainer = document.querySelector('.section-container.nba-container .section-content');
   playersContainer.innerHTML = '';
 
   if (Array.isArray(playerData) && playerData.length > 0) {
-    const playersList = document.createElement('ul');
-    playersList.classList.add('players-list');
+    const player = playerData[0];
 
-    playerData.forEach(function (player) {
-      const playerItem = createPlayerItem(player);
-      playersList.appendChild(playerItem);
-    });
-
-    playersContainer.appendChild(playersList);
+    const playerItem = createPlayerItem(player);
+    playersContainer.appendChild(playerItem);
   } else {
     const noDataMessage = document.createElement('p');
     noDataMessage.textContent = 'Coming soon';
     playersContainer.appendChild(noDataMessage);
   }
 }
+
 
 function createPlayerItem(player) {
   const playerItem = document.createElement('li');
@@ -212,19 +208,14 @@ try {
 
 // Function to display musicians in the Musicians section
 function displayMusicians(musicianData) {
-  const musiciansContainer = document.querySelector('.section-container:nth-child(3) .section-content');
+  const musiciansContainer = document.querySelector('.section-container.musicians-container .section-content');
   musiciansContainer.innerHTML = '';
 
   if (musicianData && Array.isArray(musicianData) && musicianData.length > 0) {
-    const musiciansList = document.createElement('ul');
-    musiciansList.classList.add('musicians-list');
+    const musician = musicianData[0]; // Get the first musician from the array
 
-    musicianData.forEach(function (musician, index) {
-      const musicianItem = createMusicianItem(musician, index + 1);
-      musiciansList.appendChild(musicianItem);
-    });
-
-    musiciansContainer.appendChild(musiciansList);
+    const musicianItem = createMusicianItem(musician, 1);
+    musiciansContainer.appendChild(musicianItem);
   } else {
     const noDataMessage = document.createElement('p');
     noDataMessage.textContent = 'Coming soon';
