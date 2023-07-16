@@ -98,6 +98,17 @@ nav ul li a:hover {
   section:hover > *:not(h2) {
     transform: scale(1.005)
   } 
+
+  .section-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  
+  .section-link {
+    margin-top: 10px; 
+  }
   
   section h2 {
     margin-top: 0;
