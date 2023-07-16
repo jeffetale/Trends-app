@@ -36,20 +36,19 @@ document.addEventListener('DOMContentLoaded', function() {
   
 // Fetch movie data from JSON server
 async function fetchMovies() {
-try {
-  const response = await fetch('https://trendsserver.onrender.com/movies');
-  const data = await response.json();
+  try {
+    const response = await fetch('https://trendsserver.onrender.com/movies');
+    const data = await response.json();
 
-  console.log('Retrieved movie data:', data);
+    console.log('Retrieved movie data:', data);
 
-  // Update movies in the Movies section
-  updateMovies(data);
-} catch (error) {
-  console.error('Error fetching movie data:', error);
+    return data;
+  } catch (error) {
+    console.error('Error fetching movie data:', error);
+    return [];
+  }
 }
-}
 
-// Function to update movies in the Movies section
 function updateMovies(movieData) {
   const moviesSection = document.querySelector('.section-container:nth-child(2) .section-content');
   moviesSection.innerHTML = '';
@@ -65,7 +64,6 @@ function updateMovies(movieData) {
     moviesSection.appendChild(noDataMessage);
   }
 }
-
 
 function createMovieElement(movie) {
   const movieElement = document.createElement('div');
@@ -89,47 +87,49 @@ const moviesLink = document.querySelector('nav ul li a[href="#movies"]');
 
 // Add event listener to the "Movies" link
 moviesLink.addEventListener('click', function(event) {
-event.preventDefault();
+  event.preventDefault();
 
-// Get the blurred section
-const blurredSection = document.querySelector('.blurred-section');
+  // Get the blurred section
+  const blurredSection = document.querySelector('.blurred-section');
 
-// Show the blurred section
-blurredSection.classList.add('show-section');
+  // Show the blurred section
+  blurredSection.classList.add('show-section');
 
-// Fetch all movies
-fetchMovies().then(function(movieData) {
-  // Update the blurred section with the movie data
-  updateBlurredSection(movieData);
-});
+  // Fetch all movies
+  fetchMovies().then(function(movieData) {
+    // Update the blurred section with the movie data
+    updateBlurredSection(movieData);
+  });
 });
 
 // Function to update the blurred section with movie data
 function updateBlurredSection(movieData) {
-const blurredContent = document.querySelector('.blurred-section .section-content');
-blurredContent.innerHTML = '';
+  const blurredContent = document.querySelector('.blurred-section .section-content');
+  blurredContent.innerHTML = '';
 
-if (Array.isArray(movieData) && movieData.length > 0) {
-  const moviesContainer = document.createElement('div');
-  moviesContainer.classList.add('movies-container');
+  if (Array.isArray(movieData) && movieData.length > 0) {
+    const moviesContainer = document.createElement('div');
+    moviesContainer.classList.add('movies-container');
 
-  movieData.forEach(function(movie) {
-    const movieElement = createMovieElement(movie);
-    moviesContainer.appendChild(movieElement);
-  });
+    movieData.forEach(function(movie) {
+      const movieElement = createMovieElement(movie);
+      moviesContainer.appendChild(movieElement);
+    });
 
-  blurredContent.appendChild(moviesContainer);
-} else {
-  const noDataMessage = document.createElement('p');
-  noDataMessage.textContent = 'No movies found';
-  blurredContent.appendChild(noDataMessage);
+    blurredContent.appendChild(moviesContainer);
+  } else {
+    const noDataMessage = document.createElement('p');
+    noDataMessage.textContent = 'No movies found';
+    blurredContent.appendChild(noDataMessage);
+  }
 }
-}
 
+// Fetch initial movie data when the page loads
+fetchMovies().then(function(movieData) {
+  // Update the Movies section with the initial movie
+  updateMovies(movieData);
+});
 
-
-// Call the fetchMovies function to initiate the API request
-fetchMovies();
 
 // Fetch player data from JSON server
 async function fetchPlayers() {
