@@ -33,10 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
   }
-
   
-});
-
 // Fetch movie data from JSON server
 async function fetchMovies() {
 try {
@@ -136,17 +133,17 @@ fetchMovies();
 
 // Fetch player data from JSON server
 async function fetchPlayers() {
-try {
-  const response = await fetch('https://trendsserver.onrender.com/players');
-  const data = await response.json();
+  try {
+    const response = await fetch('https://trendsserver.onrender.com/players');
+    const data = await response.json();
 
-  console.log('Retrieved player data:', data);
+    console.log('Retrieved player data:', data);
 
-  // Update web app's content with the player data
-  updatePlayers(data);
-} catch (error) {
-  console.error('Error fetching player data:', error);
-}
+    return data;
+  } catch (error) {
+    console.error('Error fetching player data:', error);
+    return [];
+  }
 }
 
 function updatePlayers(playerData) {
@@ -154,17 +151,15 @@ function updatePlayers(playerData) {
   playersContainer.innerHTML = '';
 
   if (Array.isArray(playerData) && playerData.length > 0) {
-    const player = playerData[0];
-
-    const playerItem = createPlayerItem(player);
-    playersContainer.appendChild(playerItem);
+    const initialPlayer = playerData[0];
+    const initialPlayerItem = createPlayerItem(initialPlayer);
+    playersContainer.appendChild(initialPlayerItem);
   } else {
     const noDataMessage = document.createElement('p');
     noDataMessage.textContent = 'Coming soon';
     playersContainer.appendChild(noDataMessage);
   }
 }
-
 
 function createPlayerItem(player) {
   const playerItem = document.createElement('li');
@@ -189,7 +184,36 @@ function createPlayerItem(player) {
   return playerItem;
 }
 
-fetchPlayers();
+// Get the "NBA" link element
+const nbaLink = document.querySelector('nav ul li a[href="#nba"]');
+
+// Add event listener to the "NBA" link
+nbaLink.addEventListener('click', function (event) {
+  event.preventDefault();
+
+  // Get the NBA container
+  const nbaContainer = document.querySelector('.section-container.nba-container');
+
+  // Fetch all players
+  fetchPlayers().then(function (playerData) {
+    // Update the NBA container with all players
+    updatePlayers(playerData);
+
+    // Show all NBA players in the container
+    const playerItems = nbaContainer.querySelectorAll('.player-item');
+    playerItems.forEach(function (playerItem) {
+      playerItem.classList.remove('hidden');
+    });
+  });
+});
+
+// Fetch initial player data when the page loads
+fetchPlayers().then(function (playerData) {
+  // Update the NBA container with the initial player
+  updatePlayers(playerData);
+});
+
+
 
 // Fetch musician data from JSON server
 async function fetchMusicians() {
@@ -294,6 +318,9 @@ sectionContainers.forEach(function (sectionContainer) {
     }
   });
 });
+
+});
+
 
 
 
