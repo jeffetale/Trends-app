@@ -223,10 +223,10 @@ try {
 
   console.log('Retrieved musician data:', data);
 
-  // Update musician data in the Musicians section
-  displayMusicians(data);
+  return data;
 } catch (error) {
   console.error('Error fetching musician data:', error);
+  return [];
 }
 }
 
@@ -235,8 +235,8 @@ function displayMusicians(musicianData) {
   const musiciansContainer = document.querySelector('.section-container.musicians-container .section-content');
   musiciansContainer.innerHTML = '';
 
-  if (musicianData && Array.isArray(musicianData) && musicianData.length > 0) {
-    const musician = musicianData[0]; // Get the first musician from the array
+  if (Array.isArray(musicianData) && musicianData.length > 0) {
+    const musician = musicianData[0]; 
 
     const musicianItem = createMusicianItem(musician, 1);
     musiciansContainer.appendChild(musicianItem);
@@ -270,7 +270,34 @@ function createMusicianItem(musician, index) {
   return musicianItem;
 }
    
-fetchMusicians();
+// Get the "musicians" link element
+const musicianLink = document.querySelector('nav ul li a[href="#music"]');
+
+// Add event listener to the "musicians" link
+musicianLink.addEventListener('click', function (event) {
+  event.preventDefault();
+
+  // Get the music container
+  const musiciansContainer = document.querySelector('.section-container.musicians-container');
+
+  // Fetch all musicians
+  fetchMusicians().then(function (musicianData) {
+    // Update the musician container with all musicians
+    displayMusicians(musicianData);
+
+    // Show all musicians in the container
+    const musicianItems = musiciansContainer.querySelectorAll('.musician-item');
+    musicianItems.forEach(function (musicianItem) {
+      musicianItem.classList.remove('hidden');
+    });
+  });
+});
+
+// Fetch initial musician data when the page loads
+fetchMusicians().then(function (musicianData) {
+  // Update the musicians container with the initial musician
+  displayMusicians(musicianData);
+});
 
 // Get all the section containers
 const sectionContainers = document.querySelectorAll('.section-container');
